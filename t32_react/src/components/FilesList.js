@@ -115,9 +115,13 @@ const FileList = () => {
                         <td>{file.filename}</td>
                         <td>
                             <button onClick={() => handleDelete(file.uuid)}>Delete</button>
-                            <Link to={`/show_file/${file.uuid}`}>
-                                <button>Show</button>
+                            <Link to={`/video/${file.uuid}`}>
+                                <button>Show Video</button>
                             </Link>
+                            <Link to={`/image/${file.uuid}`}>
+                                <button>Show Image</button>
+                            </Link>
+
                             <button onClick={() => handleDownload(file.uuid)}>Download</button>
                         </td>
                     </tr>

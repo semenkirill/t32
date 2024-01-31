@@ -9,6 +9,8 @@ import { Routes, Route } from 'react-router-dom';
 import Email from "./components/Email";
 import FileList from "./components/FilesList";
 import WebcamVideo from "./components/WebcamComponent";
+import ImageViewer from "./components/ImageViewer";
+import VideoViewer from "./components/VideoViewer";
 
 function App() {
 
@@ -22,6 +24,8 @@ function App() {
         <Route path="email" element={<Email />} />
         <Route path="filelist" element={<FileList />} />
         <Route path="webcam" element={<WebcamVideo />} />
+        <Route path="/video/:uuid_file" element={<VideoViewer />} />
+        <Route path="/image/:uuid_file" element={<ImageViewer />} />
 
         {/* we want to protect these routes */}
         <Route element={<RequireAuth/>}>
