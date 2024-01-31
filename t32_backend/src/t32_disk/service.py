@@ -79,4 +79,16 @@ async def download_file(user_id: int, file_uuid: str):
     else:
         raise HTTPException(status_code=404, detail="File not found")
 
+async def get_path_file(file_uuid: str):
+    select_query = files.select().where(
+        (files.c.uuid == file_uuid)
+    )
+    existing_file = await fetch_one(select_query)
+
+    if existing_file:
+        user_folder = Path(f"uploads/{existing_file['user_id']}")
+        file_path = user_folder / existing_file['filename']
+        return file_path
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
 

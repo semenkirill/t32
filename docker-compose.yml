@@ -9,6 +9,8 @@ services:
     build:
       context: t32_backend/
       dockerfile: Dockerfile
+    volumes:
+      - ./t32_backend:/src
     ports:
       - "8000:8000"
     depends_on:
