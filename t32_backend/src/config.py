@@ -7,7 +7,7 @@ from src.constants import Environment
 
 
 class Config(BaseSettings):
-    DATABASE_URL: PostgresDsn
+    DATABASE_URL: PostgresDsn = PostgresDsn("postgresql+asyncpg://t32_backend:t32_backend@127.0.0.1:5432/t32_backend")
 
     SITE_DOMAIN: str = "localhost"
 
@@ -15,9 +15,9 @@ class Config(BaseSettings):
 
     SENTRY_DSN: str | None = None
 
-    CORS_ORIGINS: list[str]
+    CORS_ORIGINS: list[str] = ["*"]
     CORS_ORIGINS_REGEX: str | None = None
-    CORS_HEADERS: list[str]
+    CORS_HEADERS: list[str] = ["*"]
 
     APP_VERSION: str = "1"
 

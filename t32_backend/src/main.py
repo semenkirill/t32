@@ -6,7 +6,10 @@ from src.auth.router import router as auth_router
 from src.t32_disk.router import router as t32_disk_router
 from src.config import app_configs, settings
 from fastapi.templating import Jinja2Templates
+from dotenv import load_dotenv
 
+# Загрузка переменных окружения из файла .env
+load_dotenv()
 app = FastAPI(**app_configs)
 
 app.add_middleware(
@@ -33,3 +36,12 @@ async def healthcheck() -> dict[str, str]:
 
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 app.include_router(t32_disk_router, prefix="/t32_disk", tags=["T32 Disk Router"])
+
+if __name__ == "__main__":
+    import uvicorn
+
+    # Получение хоста и порта из переменных окружения, или использование значений по умолчанию
+    host = "0.0.0.0"
+    port = 8000
+
+    uvicorn.run(app, host=host, port=port)
