@@ -1,0 +1,48 @@
+default:
+  just --list
+
+up:
+  docker-compose up -d
+
+kill:
+  docker-compose kill
+
+build:
+  docker-compose build
+
+ps:
+  docker-compose ps
+
+exec *args:
+  docker-compose exec t32_journal {{args}}
+
+logs *args:
+    docker-compose logs {{args}} -f
+
+mm *args:
+  docker compose exec t32_journal alembic revision --autogenerate -m "{{args}}"
+
+migrate:
+  docker compose exec t32_journal alembic upgrade head
+
+downgrade *args:
+  docker compose exec t32_journal alembic downgrade {{args}}
+
+ruff *args:
+  docker compose exec t32_journal ruff {{args}} src
+  docker compose exec t32_journal ruff format src
+
+lint:
+  just ruff --fix
+
+backup:
+  docker compose exec t32_journal_db scripts/backup
+
+# examples:
+# "just get-backup dump_name_2021-01-01..backup.gz" to copy particular backup
+# "just get-backup" to copy directory (backups) with all dumps
+mount-docker-backup *args:
+  docker cp t32_journal_db:/backups/{{args}} ./{{args}}
+
+restore *args:
+    docker compose exec t32_journal_db scripts/restore {{args}}

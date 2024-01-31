@@ -1,0 +1,80 @@
+version: '3.7'
+
+services:
+  t32_backend:
+    container_name: t32_backend
+    image: t32_backend_image
+    env_file:
+      - t32_backend/.env
+    build:
+      context: t32_backend/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - t32_backend_db
+      - t32_journal
+      - t32_react
+
+  t32_backend_db:
+    container_name: t32_backend_db
+    hostname: t32_backend_db
+    image: library/postgres:14.1
+    env_file:
+      - t32_backend/.env
+    volumes:
+      - t32_backend_db_data:/var/lib/postgresql/data
+      - t32_backend_db_data_backups:/backups
+      - ./scripts/postgres:/scripts
+    ports:
+      - "5432:5432"
+
+  t32_journal:
+    container_name: t32_journal
+    image: t32_journal_image
+    env_file:
+      - t32_journal/.env
+    build:
+      context: t32_journal/
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    depends_on:
+      - t32_journal_db
+
+  t32_journal_db:
+    container_name: t32_journal_db
+    hostname: t32_journal_db
+    image: library/postgres:14.1
+    env_file:
+      - t32_journal/.env
+    volumes:
+      - t32_journal_db_data:/var/lib/postgresql/data
+      - t32_journal_db_data_backups:/backups
+      - ./scripts/postgres:/scripts
+    ports:
+      - "5433:5432"
+
+  t32_react:
+    build:
+      context: t32_react/.
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"  # Порт на локальной машине : Порт в контейнере
+    environment:
+      - NODE_ENV=development
+
+volumes:
+  t32_backend_db_data:
+    driver: "local"
+  t32_backend_db_data_backups:
+    driver: "local"
+  t32_journal_db_data:
+    driver: "local"
+  t32_journal_db_data_backups:
+    driver: "local"
+
+networks:
+  default:
+    external: true
+    name: main

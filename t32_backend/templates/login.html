@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <form id="loginForm">
+    <div class="form-group">
+        <label for="email">email</label>
+        <input type="text" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="submitForm()">Login</button>
+</form>
+<button type="button" class="btn btn-secondary" onclick="goToRegistration()">Register</button>
+
+<script>
+function submitForm() {
+    var form = document.getElementById('loginForm');
+    var formData = new FormData(form);
+
+    var jsonData = {};
+    formData.forEach(function(value, key){
+        jsonData[key] = value;
+    });
+
+    fetch('{{ url_for("auth_user") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Обработка ответа от сервера
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+function goToRegistration() {
+            // Перенаправление на страницу регистрации
+            window.location.href = '{{ url_for("registration_page") }}';
+        }
+</script>
+{% endblock %}
