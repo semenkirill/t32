@@ -75,8 +75,3 @@ volumes:
     driver: "local"
   t32_journal_db_data_backups:
     driver: "local"
-
-networks:
-  default:
-    external: true
-    name: main
