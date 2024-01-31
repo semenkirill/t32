@@ -16,6 +16,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"),
     allow_headers=settings.CORS_HEADERS,
+    expose_headers=["Content-Disposition"]
 )
 
 if settings.ENVIRONMENT.is_deployed:

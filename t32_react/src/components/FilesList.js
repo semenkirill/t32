@@ -69,31 +69,32 @@ const FileList = () => {
         }
     };
 
-    const handleShow = (filename) => {
-        console.log(`Playing file: ${filename}`);
-    };
 
     const handleDownload = async (uuid) => {
-        try {
-            const response = await axios.get(`t32_disk/download_file/${uuid}`, {
-                headers: {
-                    Authorization: `Bearer ${auth.accessToken}`,
-                },
-                responseType: 'blob',  // Указываем тип ответа как blob
-            });
+    try {
+        const response = await axios.get(`t32_disk/download_file/${uuid}`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+            },
+            responseType: 'blob',
+        });
+        console.log(response.headers)
+        const contentDispositionHeader = response.headers['content-disposition'];
+        const filename = contentDispositionHeader
+            ? contentDispositionHeader.split('filename=')[1]
+            : 'error.txt';
 
-            // Создаем ссылку для скачивания и эмулируем клик для запуска скачивания
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'file.txt');  // Укажите имя файла для скачивания
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (error) {
-            console.error('Error downloading file:', error);
-        }
-    };
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error('Ошибка при скачивании файла:', error);
+    }
+};
 
     return (
         <section>

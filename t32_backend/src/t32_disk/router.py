@@ -38,7 +38,9 @@ async def download_uploaded_file(file_uuid: str, background_tasks: BackgroundTas
     background_tasks.add_task(send_client_log, jwt_data.user_id, f"Клиент пытается скачать файл {file_uuid}")
     file_path = await download_file(jwt_data.user_id, file_uuid)
     background_tasks.add_task(send_server_log, jwt_data.user_id, f"Клиент скачал файл {file_uuid}")
-    return FileResponse(file_path, filename=file_path.name)
+    file = FileResponse(file_path, filename=file_path.name)
+    print(file.headers)
+    return file
 
 @router.get("/video/{file_uuid}")
 async def video_endpoint(file_uuid: str, range: str = Header(None)):
